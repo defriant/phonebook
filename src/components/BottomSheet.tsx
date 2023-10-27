@@ -1,5 +1,5 @@
 import { Container, Fade, Slide } from '@chakra-ui/react'
-import { ReactNode, useEffect } from 'react'
+import { ReactNode } from 'react'
 
 type BottomSheetProps = {
     children?: ReactNode
@@ -9,10 +9,6 @@ type BottomSheetProps = {
 }
 
 function BottomSheet({ children, isOpen, onClose, height = 'auto' }: BottomSheetProps) {
-    useEffect(() => {
-        console.log(isOpen)
-    }, [isOpen])
-
     return (
         <>
             {height !== 'full' && (

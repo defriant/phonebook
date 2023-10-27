@@ -26,6 +26,14 @@ export default extendTheme({
         primary: '#00AA5B',
         primaryDarker: '#098A4E',
     },
+    space: {
+        'header-height': '80px',
+    },
+    sizes: {
+        'body-width': 'calc(100vw - var(--chakra-sizes-scrollbar-width))',
+        'header-height': '80px',
+        'scrollbar-width': '.5rem',
+    },
     semanticTokens: {
         colors: {
             'chakra-body-bg': {

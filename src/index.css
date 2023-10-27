@@ -1,6 +1,26 @@
 /* Global css here */
 
-@media screen and (max-width: 992px) {
+::-webkit-scrollbar {
+    width: var(--chakra-sizes-scrollbar-width);
+    height: var(--chakra-sizes-scrollbar-width);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--chakra-colors-scrollbar-thumb);
+}
+
+::-webkit-scrollbar-track {
+    background: var(--chakra-colors-scrollbar-bg);
+}
+
+@media screen and (min-width: 769px) {
+    body {
+        width: var(--chakra-sizes-body-width);
+        overflow-x: hidden !important;
+    }
+}
+
+@media screen and (max-width: 768px) {
     body {
         -webkit-tap-highlight-color: transparent;
         -webkit-touch-callout: none;
