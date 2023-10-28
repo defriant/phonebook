@@ -1,6 +1,6 @@
-import { Button, Center, Icon, Link, Stack, Text } from '@chakra-ui/react'
+import { Button, Center, Icon, Link, Stack, Text, useToast } from '@chakra-ui/react'
 import { FaTimes } from 'react-icons/fa'
-import { Link as ReactLink } from 'react-router-dom'
+import { Link as ReactLink, useNavigate } from 'react-router-dom'
 import { PATH } from '../routes/path'
 import AnimateScreen from '../components/AnimateScreen'
 import { AiOutlinePhone, AiOutlineUser } from 'react-icons/ai'
@@ -9,14 +9,41 @@ import InputGroupMultiple, { inputMultipleType } from '../components/InputGroupM
 import { useContext, useEffect, useLayoutEffect, useState } from 'react'
 import AnimateScreenHeader from '../components/AnimateScreenHeader'
 import AnimateScreenBody from '../components/AnimateScreenBody'
-import { ContactContext, ContactContextType } from './Contact'
+import { useMutation } from '@apollo/client'
+import { AddContactWithPhones } from '../gql/mutations'
+import { ContactContext } from './Contact'
 
 function AddContact() {
-    // const { data, refetch } = useContext<ContactContextType>(ContactContext)
-
+    const { refetch } = useContext(ContactContext)
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [phones, setPhones] = useState<inputMultipleType[]>([{ value: '' }])
+    const [isValid, setIsValid] = useState(false)
+    const toast = useToast()
+    const navigate = useNavigate()
+
+    const [addContact, { loading }] = useMutation(AddContactWithPhones, {
+        onCompleted: res => {
+            toast.closeAll()
+            toast({
+                status: 'success',
+                title: 'Success',
+                description: `${res.insert_contact.returning[0].first_name} ${res.insert_contact.returning[0].last_name} has been added to contact`,
+                position: 'bottom',
+            })
+            navigate(PATH.contact)
+            refetch!()
+        },
+        onError: err => {
+            toast.closeAll()
+            toast({
+                status: 'error',
+                title: 'Failed',
+                description: err.message,
+                position: 'bottom',
+            })
+        },
+    })
 
     useLayoutEffect(() => {
         document.body.style.overflow = 'hidden'
@@ -25,6 +52,16 @@ function AddContact() {
             document.body.style.overflow = 'auto'
         }
     }, [])
+
+    useEffect(() => {
+        let valid = true
+
+        if (firstName.replaceAll(' ', '').length === 0) valid = false
+        if (lastName.replaceAll(' ', '').length === 0) valid = false
+        if (!phones.find(p => p.value.replaceAll(' ', '').length > 0)) valid = false
+
+        setIsValid(valid)
+    }, [firstName, lastName, phones])
 
     return (
         <AnimateScreen
@@ -76,6 +113,17 @@ function AddContact() {
                             colorScheme='green'
                             rounded='full'
                             px='2rem'
+                            isDisabled={!isValid}
+                            isLoading={loading}
+                            onClick={() =>
+                                addContact({
+                                    variables: {
+                                        first_name: firstName,
+                                        last_name: lastName,
+                                        phones: phones.map(p => ({ number: p.value })),
+                                    },
+                                })
+                            }
                         >
                             Save
                         </Button>

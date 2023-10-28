@@ -2,10 +2,11 @@ import { Avatar, Grid, Icon, Link, Stack, Text } from '@chakra-ui/react'
 import { BsHeartFill } from 'react-icons/bs'
 import { Link as ReactLink } from 'react-router-dom'
 import { PATH } from '../routes/path'
+import { TContact } from '../pages/Contact'
 
 type CardContactProps = {
     isFavorite?: boolean
-    data: any
+    data: TContact
 }
 
 function CardContact({ isFavorite, data }: CardContactProps) {
@@ -31,6 +32,7 @@ function CardContact({ isFavorite, data }: CardContactProps) {
                     size='sm'
                     overflow='visible'
                 />
+
                 <Stack spacing='.15rem'>
                     <Text
                         fontWeight='semibold'
@@ -40,6 +42,7 @@ function CardContact({ isFavorite, data }: CardContactProps) {
                     </Text>
                     <Text fontSize='xs'>{data.phones.length > 0 && data.phones[0].number}</Text>
                 </Stack>
+
                 {isFavorite && (
                     <Icon
                         as={BsHeartFill}

@@ -1,7 +1,8 @@
-import { lazy } from 'react'
+import { Suspense, lazy } from 'react'
 import { Route, Routes as ReactRoutes, useLocation } from 'react-router-dom'
 import { PATH } from './path'
 import { AnimatePresence } from 'framer-motion'
+import PageLoader from '../components/PageLoader'
 
 const Contact = lazy(() => import('../pages/Contact'))
 const AddContact = lazy(() => import('../pages/AddContact'))
@@ -11,26 +12,28 @@ function Routes() {
     const location = useLocation()
 
     return (
-        <AnimatePresence>
-            <ReactRoutes
-                location={location}
-                key={location.pathname}
-            >
-                <Route
-                    path={PATH.contact}
-                    element={<Contact />}
+        <Suspense fallback={<PageLoader />}>
+            <AnimatePresence>
+                <ReactRoutes
+                    location={location}
+                    key={location.pathname}
                 >
                     <Route
-                        path={PATH.addContact}
-                        element={<AddContact />}
-                    />
-                    <Route
-                        path={PATH.detailContact}
-                        element={<DetailContact />}
-                    />
-                </Route>
-            </ReactRoutes>
-        </AnimatePresence>
+                        path={PATH.contact}
+                        element={<Contact />}
+                    >
+                        <Route
+                            path={PATH.addContact}
+                            element={<AddContact />}
+                        />
+                        <Route
+                            path={PATH.detailContact}
+                            element={<DetailContact />}
+                        />
+                    </Route>
+                </ReactRoutes>
+            </AnimatePresence>
+        </Suspense>
     )
 }
 

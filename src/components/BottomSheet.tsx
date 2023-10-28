@@ -1,4 +1,4 @@
-import { Container, Fade, Slide } from '@chakra-ui/react'
+import { Box, Container, Fade, Slide } from '@chakra-ui/react'
 import { ReactNode } from 'react'
 
 type BottomSheetProps = {
@@ -12,20 +12,27 @@ function BottomSheet({ children, isOpen, onClose, height = 'auto' }: BottomSheet
     return (
         <>
             {height !== 'full' && (
-                <Container
+                <Box
                     as={Fade}
                     in={isOpen}
                     unmountOnExit={true}
                     pos='fixed'
                     top='0'
+                    left='0'
                     right='0'
                     bottom='0'
-                    left='0'
-                    bg='rgba(0, 0, 0, .5)'
+                    w='body-width'
+                    // bg='rgba(0, 0, 0, .5)'
                     backdropFilter='blur(3px)'
                     onClick={onClose}
-                    zIndex='overlay'
-                />
+                    zIndex='modal'
+                >
+                    <Container
+                        h='100vh'
+                        bg='rgba(0, 0, 0, .5)'
+                        // backdropFilter='blur(3px)'
+                    />
+                </Box>
             )}
 
             <Slide
@@ -33,7 +40,8 @@ function BottomSheet({ children, isOpen, onClose, height = 'auto' }: BottomSheet
                 unmountOnExit={true}
                 direction='bottom'
                 style={{
-                    zIndex: 1310,
+                    width: 'var(--chakra-sizes-body-width)',
+                    zIndex: 1400,
                 }}
             >
                 <Container

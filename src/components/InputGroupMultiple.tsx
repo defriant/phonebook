@@ -66,10 +66,10 @@ function InputGroupMultiple({ type, icon, placeholder, values, setValues }: Inpu
                                 }
                                 onFocus={() => v.value.length === 0 && onShowAddMore()}
                                 onBlur={() => {
-                                    if (v.value.length === 0) {
+                                    if (v.value.length === 0 && values.length <= 1) {
                                         setTimeout(() => {
                                             onCloseAddMore()
-                                        }, 300)
+                                        }, 200)
                                     }
                                 }}
                             />

@@ -1,42 +1,42 @@
 import { Fragment, useContext, useEffect, useState } from 'react'
-import { ContactContext } from '../pages/Contact'
+import { ContactContext, TContact } from '../pages/Contact'
 import { Stack, Text } from '@chakra-ui/react'
 import CardContact from './CardContact'
 
 function ContactList() {
     const { data } = useContext(ContactContext)
-    const [contacts, setContacts] = useState([])
+    const [formattedContacts, setFormattedContacts] = useState([])
 
     useEffect(() => {
         if (data) {
             const sortedContact: any = []
 
-            data.contact.forEach((v: any) => {
+            data.contact.forEach((contact: TContact) => {
                 if (sortedContact.length === 0) {
                     sortedContact.push({
-                        key: v.first_name.toLowerCase()[0],
-                        contacts: [v],
+                        key: contact.first_name.toLowerCase()[0],
+                        contacts: [contact],
                     })
                 } else {
-                    const keyExist = sortedContact.findIndex((c: any) => c.key === v.first_name.toLowerCase()[0])
+                    const keyExist = sortedContact.findIndex((c: any) => c.key === contact.first_name.toLowerCase()[0])
                     if (keyExist >= 0) {
-                        sortedContact[keyExist].contacts.push(v)
+                        sortedContact[keyExist].contacts.push(contact)
                     } else {
                         sortedContact.push({
-                            key: v.first_name.toLowerCase()[0],
-                            contacts: [v],
+                            key: contact.first_name.toLowerCase()[0],
+                            contacts: [contact],
                         })
                     }
                 }
             })
 
-            setContacts(sortedContact)
+            setFormattedContacts(sortedContact)
         }
     }, [data])
 
     return (
         <>
-            {contacts.map((c: any, i: number) => (
+            {formattedContacts.map((c: any, i: number) => (
                 <Fragment key={i}>
                     <Text
                         fontSize='sm'
@@ -45,7 +45,7 @@ function ContactList() {
                         {c.key.toUpperCase()}
                     </Text>
                     <Stack spacing='.75rem'>
-                        {c.contacts.map((v: any, j: number) => (
+                        {c.contacts.map((v: TContact, j: number) => (
                             <CardContact
                                 key={j}
                                 data={v}

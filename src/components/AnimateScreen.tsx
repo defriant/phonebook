@@ -17,6 +17,7 @@ function AnimateScreen({ initial, animate, exit, children }: AnimateScreenProps)
             left='0'
             right='0'
             bottom='0'
+            w='body-width'
             zIndex='overlay'
         >
             <Container

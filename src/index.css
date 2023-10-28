@@ -21,6 +21,10 @@
 }
 
 @media screen and (max-width: 768px) {
+    :root {
+        --chakra-sizes-body-width: 100vw !important;
+    }
+
     body {
         -webkit-tap-highlight-color: transparent;
         -webkit-touch-callout: none;

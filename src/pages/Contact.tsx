@@ -1,39 +1,62 @@
-import { Box, Container, Flex, Icon, Link, Stack, Text } from '@chakra-ui/react'
-// import CardContact from '../components/CardContact'
-import { FaPlusCircle } from 'react-icons/fa'
+import { Box, Center, Container, Flex, Icon, Link, Spinner, Stack, Text } from '@chakra-ui/react'
+import { FaChevronDown, FaPlusCircle } from 'react-icons/fa'
 import { Outlet, Link as ReactLink } from 'react-router-dom'
 import { PATH } from '../routes/path'
-import { ApolloError, ApolloQueryResult, OperationVariables, useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 import { GetContactList } from '../gql/queries'
-import { createContext, useEffect } from 'react'
+import { createContext, useState, useEffect } from 'react'
 import ContactList from '../components/ContactList'
+import { ApolloQueryType } from '../gql/apolloConfig'
+import PageLoader from '../components/PageLoader'
 
-export type ContactContextType = {
-    data?: any
-    error?: ApolloError | undefined
-    loading?: boolean
-    refetch?: (variables?: Partial<OperationVariables> | undefined) => Promise<ApolloQueryResult<any>>
+export type TContact = {
+    __typename: string
+    id: number
+    first_name: string
+    last_name: string
+    phones: {
+        __typename: string
+        number: string
+    }[]
 }
-export const ContactContext = createContext<ContactContextType>({})
+
+type TGetContact = {
+    contact: TContact[]
+}
+
+type TGetContactVariables = {
+    where?: any
+    order_by?: any
+    limit?: number
+    offset?: number
+}
+
+export const ContactContext = createContext<ApolloQueryType<TGetContact, TGetContactVariables>>({})
+
+const ContactListBaseVar = {
+    order_by: {
+        first_name: 'asc',
+    },
+    offset: 0,
+    limit: 10,
+}
 
 function Home() {
-    const { data, error, loading, refetch } = useQuery(GetContactList, {
-        variables: {
-            order_by: {
-                first_name: 'asc',
-            },
-            limit: 10,
-        },
+    const { data, error, loading, refetch, fetchMore } = useQuery<TGetContact>(GetContactList, {
+        variables: ContactListBaseVar,
     })
+    const [showLoadMore, setShowLoadMore] = useState(false)
+    const [isLoadMore, setIsLoadMore] = useState(false)
 
-    // useEffect(() => {
-    //     refetch({
-    //         order_by: {
-    //             first_name: 'asc',
-    //         },
-    //         limit: 10,
-    //     })
-    // }, [])
+    useEffect(() => {
+        if (data?.contact && data.contact.length % ContactListBaseVar.limit === 0) {
+            setShowLoadMore(true)
+        } else {
+            setShowLoadMore(false)
+        }
+    }, [data])
+
+    if (loading) return <PageLoader />
 
     return (
         <ContactContext.Provider value={{ data, error, loading, refetch }}>
@@ -136,9 +159,63 @@ function Home() {
                             <CardContact />
                         </Stack>
                     </Stack> */}
+
                     <Stack spacing='1rem'>
                         <ContactList />
                     </Stack>
+
+                    {showLoadMore && (
+                        <Center>
+                            {isLoadMore ? (
+                                <Spinner
+                                    h='25px'
+                                    w='25px'
+                                    color='primary'
+                                />
+                            ) : (
+                                <Flex
+                                    gap='1rem'
+                                    align='center'
+                                    color='primary'
+                                    _hover={{
+                                        color: 'primaryDarker',
+                                    }}
+                                    transitionDuration='normal'
+                                    cursor='pointer'
+                                    h='25px'
+                                    onClick={() => {
+                                        setIsLoadMore(true)
+                                        fetchMore({
+                                            variables: {
+                                                offset: data?.contact.length,
+                                            },
+                                            updateQuery: (prev, { fetchMoreResult }) => {
+                                                setIsLoadMore(false)
+
+                                                if (fetchMoreResult.contact.length === 0) {
+                                                    setShowLoadMore(false)
+                                                    return prev
+                                                }
+
+                                                return {
+                                                    ...prev,
+                                                    contact: [...prev.contact, ...fetchMoreResult.contact],
+                                                }
+                                            },
+                                        })
+                                    }}
+                                >
+                                    <Icon as={FaChevronDown} />
+                                    <Text
+                                        fontSize='sm'
+                                        fontWeight='medium'
+                                    >
+                                        Load more
+                                    </Text>
+                                </Flex>
+                            )}
+                        </Center>
+                    )}
                 </Stack>
 
                 <Outlet />
