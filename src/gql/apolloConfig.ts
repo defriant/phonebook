@@ -5,12 +5,12 @@ export const client = new ApolloClient({
     cache: new InMemoryCache(),
 })
 
-export type ApolloQueryType<TData, TVariables> = {
+export type ApolloQueryType<TData> = {
     data?: TData
     error?: ApolloError | undefined
     loading?: boolean
     refetch?: (variables?: Partial<OperationVariables> | undefined) => Promise<ApolloQueryResult<TData>>
-    fetchMore?: <TFetchData = TData, TFetchVars = TVariables>(
+    fetchMore?: <TFetchData = TData, TFetchVars extends OperationVariables = OperationVariables>(
         fetchMoreOptions: FetchMoreQueryOptions<TFetchVars, TFetchData> & {
             updateQuery?: (
                 previousQueryResult: TData,

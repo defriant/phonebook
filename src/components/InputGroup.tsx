@@ -1,14 +1,14 @@
 import { Center, Grid, Icon, Input } from '@chakra-ui/react'
-import { Dispatch, SetStateAction } from 'react'
+import { ChangeEventHandler } from 'react'
 
 type InputGroupProps = {
     icon: any
     placeholder: string
-    value: string
-    setValue: Dispatch<SetStateAction<string>>
+    value?: string
+    onChange?: ChangeEventHandler<HTMLInputElement>
 }
 
-function InputGroup({ icon, placeholder, value, setValue }: InputGroupProps) {
+function InputGroup({ icon, placeholder, value, onChange }: InputGroupProps) {
     return (
         <Grid
             templateColumns='40px 1fr'
@@ -37,7 +37,7 @@ function InputGroup({ icon, placeholder, value, setValue }: InputGroupProps) {
                 fontSize='sm'
                 placeholder={placeholder}
                 value={value}
-                onChange={e => setValue(e.target.value)}
+                onChange={onChange}
                 autoComplete='none'
             />
         </Grid>

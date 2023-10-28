@@ -1,6 +1,6 @@
 import { Box, Container } from '@chakra-ui/react'
 import { motion } from 'framer-motion'
-import { ReactNode } from 'react'
+import { ReactNode, useLayoutEffect } from 'react'
 
 type AnimateScreenProps = {
     initial?: any
@@ -10,6 +10,14 @@ type AnimateScreenProps = {
 }
 
 function AnimateScreen({ initial, animate, exit, children }: AnimateScreenProps) {
+    useLayoutEffect(() => {
+        document.body.style.overflow = 'hidden'
+
+        return () => {
+            document.body.style.overflow = 'auto'
+        }
+    }, [])
+
     return (
         <Box
             pos='fixed'

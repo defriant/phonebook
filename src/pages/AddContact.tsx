@@ -6,12 +6,12 @@ import AnimateScreen from '../components/AnimateScreen'
 import { AiOutlinePhone, AiOutlineUser } from 'react-icons/ai'
 import InputGroup from '../components/InputGroup'
 import InputGroupMultiple, { inputMultipleType } from '../components/InputGroupMultiple'
-import { useContext, useEffect, useLayoutEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import AnimateScreenHeader from '../components/AnimateScreenHeader'
 import AnimateScreenBody from '../components/AnimateScreenBody'
 import { useMutation } from '@apollo/client'
 import { AddContactWithPhones } from '../gql/mutations'
-import { ContactContext } from './Contact'
+import { ContactContext } from '../contexts/ContactProvider'
 
 function AddContact() {
     const { refetch } = useContext(ContactContext)
@@ -30,6 +30,11 @@ function AddContact() {
                 title: 'Success',
                 description: `${res.insert_contact.returning[0].first_name} ${res.insert_contact.returning[0].last_name} has been added to contact`,
                 position: 'bottom',
+                duration: 3000,
+                isClosable: true,
+                containerStyle: {
+                    fontSize: 'sm',
+                },
             })
             navigate(PATH.contact)
             refetch!()
@@ -41,17 +46,14 @@ function AddContact() {
                 title: 'Failed',
                 description: err.message,
                 position: 'bottom',
+                duration: 3000,
+                isClosable: true,
+                containerStyle: {
+                    fontSize: 'sm',
+                },
             })
         },
     })
-
-    useLayoutEffect(() => {
-        document.body.style.overflow = 'hidden'
-
-        return () => {
-            document.body.style.overflow = 'auto'
-        }
-    }, [])
 
     useEffect(() => {
         let valid = true
@@ -74,6 +76,10 @@ function AddContact() {
                 <Link
                     as={ReactLink}
                     to={PATH.contact}
+                    opacity='.5'
+                    _hover={{
+                        opacity: '1',
+                    }}
                 >
                     <Icon
                         as={FaTimes}
@@ -89,14 +95,20 @@ function AddContact() {
                             icon={AiOutlineUser}
                             placeholder='First name'
                             value={firstName}
-                            setValue={setFirstName}
+                            onChange={e => {
+                                if (/[^a-zA-Z\d\s]/gm.test(e.target.value)) return
+                                setFirstName(e.target.value)
+                            }}
                         />
 
                         <InputGroup
                             icon={AiOutlineUser}
                             placeholder='Last name'
                             value={lastName}
-                            setValue={setLastName}
+                            onChange={e => {
+                                if (/[^a-zA-Z\d\s]/gm.test(e.target.value)) return
+                                setLastName(e.target.value)
+                            }}
                         />
 
                         <InputGroupMultiple

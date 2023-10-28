@@ -2,18 +2,19 @@ import { Avatar, Grid, Icon, Link, Stack, Text } from '@chakra-ui/react'
 import { BsHeartFill } from 'react-icons/bs'
 import { Link as ReactLink } from 'react-router-dom'
 import { PATH } from '../routes/path'
-import { TContact } from '../pages/Contact'
+import { TContact } from '../contexts/ContactProvider'
+import { TFavorite } from '../contexts/FavoriteContactProvider'
 
-type CardContactProps = {
+type CardContactProps<TData> = {
     isFavorite?: boolean
-    data: TContact
+    data: TData
 }
 
-function CardContact({ isFavorite, data }: CardContactProps) {
+function CardContact({ isFavorite, data }: CardContactProps<TContact | TFavorite>) {
     return (
         <Link
             as={ReactLink}
-            to={PATH.detailContact}
+            to={PATH.detailContact.replace(':id', `${data.id}`)}
             textDecor='none !important'
         >
             <Grid
