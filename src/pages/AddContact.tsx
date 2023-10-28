@@ -6,11 +6,14 @@ import AnimateScreen from '../components/AnimateScreen'
 import { AiOutlinePhone, AiOutlineUser } from 'react-icons/ai'
 import InputGroup from '../components/InputGroup'
 import InputGroupMultiple, { inputMultipleType } from '../components/InputGroupMultiple'
-import { useLayoutEffect, useState } from 'react'
+import { useContext, useEffect, useLayoutEffect, useState } from 'react'
 import AnimateScreenHeader from '../components/AnimateScreenHeader'
 import AnimateScreenBody from '../components/AnimateScreenBody'
+import { ContactContext, ContactContextType } from './Contact'
 
 function AddContact() {
+    // const { data, refetch } = useContext<ContactContextType>(ContactContext)
+
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [phones, setPhones] = useState<inputMultipleType[]>([{ value: '' }])
@@ -60,6 +63,7 @@ function AddContact() {
                         />
 
                         <InputGroupMultiple
+                            type='number'
                             icon={AiOutlinePhone}
                             placeholder='Phone number'
                             values={phones}

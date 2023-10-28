@@ -5,9 +5,10 @@ import { PATH } from '../routes/path'
 
 type CardContactProps = {
     isFavorite?: boolean
+    data: any
 }
 
-function CardContact({ isFavorite }: CardContactProps) {
+function CardContact({ isFavorite, data }: CardContactProps) {
     return (
         <Link
             as={ReactLink}
@@ -24,20 +25,20 @@ function CardContact({ isFavorite }: CardContactProps) {
                 alignItems='center'
             >
                 <Avatar
-                    name='Nayla Intan'
+                    name={`${data.first_name} ${data.last_name}`}
                     w='40px'
                     h='40px'
                     size='sm'
                     overflow='visible'
                 />
-                <Stack spacing='0'>
+                <Stack spacing='.15rem'>
                     <Text
                         fontWeight='semibold'
                         fontSize='sm'
                     >
-                        Afif Defriant
+                        {`${data.first_name} ${data.last_name}`}
                     </Text>
-                    <Text fontSize='xs'>+6281314957058</Text>
+                    <Text fontSize='xs'>{data.phones.length > 0 && data.phones[0].number}</Text>
                 </Stack>
                 {isFavorite && (
                     <Icon

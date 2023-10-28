@@ -5,13 +5,14 @@ import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai'
 export type inputMultipleType = { value: string }
 
 type InputGroupMultipleProps = {
+    type?: string
     icon: any
     placeholder: string
     values: inputMultipleType[]
     setValues: Dispatch<SetStateAction<inputMultipleType[]>>
 }
 
-function InputGroupMultiple({ icon, placeholder, values, setValues }: InputGroupMultipleProps) {
+function InputGroupMultiple({ type, icon, placeholder, values, setValues }: InputGroupMultipleProps) {
     const { isOpen: isShowAddMore, onOpen: onShowAddMore, onClose: onCloseAddMore } = useDisclosure()
 
     return (
@@ -48,6 +49,7 @@ function InputGroupMultiple({ icon, placeholder, values, setValues }: InputGroup
                             alignItems='center'
                         >
                             <Input
+                                type={type ?? 'text'}
                                 variant='unstyled'
                                 h='30px'
                                 px='.25rem'
@@ -63,7 +65,13 @@ function InputGroupMultiple({ icon, placeholder, values, setValues }: InputGroup
                                     })
                                 }
                                 onFocus={() => v.value.length === 0 && onShowAddMore()}
-                                onBlur={() => v.value.length === 0 && onCloseAddMore()}
+                                onBlur={() => {
+                                    if (v.value.length === 0) {
+                                        setTimeout(() => {
+                                            onCloseAddMore()
+                                        }, 300)
+                                    }
+                                }}
                             />
                             {values.length > 1 && (
                                 <Icon
@@ -120,7 +128,7 @@ function InputGroupMultiple({ icon, placeholder, values, setValues }: InputGroup
                         fontWeight='medium'
                         transitionDuration='normal'
                     >
-                        Add {placeholder.toLowerCase()}
+                        Add more {placeholder.toLowerCase()}
                     </Text>
                 </Flex>
             </SlideFade>
