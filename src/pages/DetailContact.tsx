@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Center, Flex, Icon, Link, Spinner, Stack, Text } from '@chakra-ui/react'
+import { Avatar, Box, Button, Center, Flex, Icon, Link, Spinner, Stack, Text, useDisclosure } from '@chakra-ui/react'
 import { FaArrowLeft } from 'react-icons/fa'
 import { Link as ReactLink, useParams } from 'react-router-dom'
 import { PATH } from '../routes/path'
@@ -6,13 +6,14 @@ import AnimateScreen from '../components/AnimateScreen'
 import { useContext } from 'react'
 import AnimateScreenHeader from '../components/AnimateScreenHeader'
 import AnimateScreenBody from '../components/AnimateScreenBody'
-import { AiOutlineEdit, AiOutlinePhone } from 'react-icons/ai'
-import { BsHeartFill, BsTrash } from 'react-icons/bs'
+import { AiOutlineDelete, AiOutlineEdit, AiOutlinePhone } from 'react-icons/ai'
+import { BsHeartFill } from 'react-icons/bs'
 import { useQuery } from '@apollo/client'
 import { GetContactDetail } from '../gql/queries'
 import { format } from 'date-fns'
 import { FavoritesContext } from '../contexts/FavoriteContactProvider'
 import { TContact } from '../contexts/ContactProvider'
+import BottomSheet from '../components/BottomSheet'
 
 type TContactDetail = {
     contact_by_pk: TContact
@@ -22,16 +23,22 @@ function DetailContact() {
     const params = useParams()
     const { data, loading, error } = useQuery<TContactDetail>(GetContactDetail, {
         variables: {
-            id: params.id,
+            id: parseInt(params.id!),
         },
     })
     const { favorites, setFavorite, removeFavorite } = useContext(FavoritesContext)
+    const { isOpen: isOpenDelete, onOpen: onOpenDelete, onClose: onCloseDelete } = useDisclosure()
 
     return (
         <AnimateScreen
             initial={{ left: '100vw' }}
             animate={{ left: '0' }}
             exit={{ left: '100vw' }}
+            onAnimationStart={(e: any) => {
+                if (e.left === '100vw') {
+                    onCloseDelete()
+                }
+            }}
         >
             <AnimateScreenHeader>
                 <Link
@@ -48,7 +55,7 @@ function DetailContact() {
                     />
                 </Link>
 
-                {!error && data && (
+                {!error && data?.contact_by_pk && (
                     <Flex
                         align='center'
                         gap='1.5rem'
@@ -59,9 +66,11 @@ function DetailContact() {
                             color='yellow.500'
                         />
                         <Icon
-                            as={BsTrash}
-                            fontSize='22px'
+                            as={AiOutlineDelete}
+                            fontSize='26px'
                             color='red.600'
+                            cursor='pointer'
+                            onClick={onOpenDelete}
                         />
                     </Flex>
                 )}
@@ -87,7 +96,16 @@ function DetailContact() {
                     </Center>
                 )}
 
-                {!error && data && (
+                {!data?.contact_by_pk && (
+                    <Center h='50vh'>
+                        <Stack align='center'>
+                            <Text fontSize='4xl'>404</Text>
+                            <Text>Not found</Text>
+                        </Stack>
+                    </Center>
+                )}
+
+                {!error && data?.contact_by_pk && (
                     <>
                         <Box
                             h='max-content'
@@ -194,6 +212,13 @@ function DetailContact() {
                     </>
                 )}
             </AnimateScreenBody>
+
+            <BottomSheet
+                isOpen={isOpenDelete}
+                onClose={onCloseDelete}
+            >
+                <Box height='300px'></Box>
+            </BottomSheet>
         </AnimateScreen>
     )
 }

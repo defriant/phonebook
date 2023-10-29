@@ -5,6 +5,7 @@ import { AnimatePresence } from 'framer-motion'
 import PageLoader from '../components/PageLoader'
 
 const Contact = lazy(() => import('../pages/Contact'))
+const SearchContact = lazy(() => import('../pages/SearchContact'))
 const AddContact = lazy(() => import('../pages/AddContact'))
 const DetailContact = lazy(() => import('../pages/DetailContact'))
 
@@ -22,6 +23,10 @@ function Routes() {
                         path={PATH.contact}
                         element={<Contact />}
                     >
+                        <Route
+                            path={PATH.searchContact}
+                            element={<SearchContact />}
+                        />
                         <Route
                             path={PATH.addContact}
                             element={<AddContact />}

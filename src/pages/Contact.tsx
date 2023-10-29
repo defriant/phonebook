@@ -1,11 +1,12 @@
 import { Box, Center, Container, Flex, Icon, Link, Spinner, Stack, Text } from '@chakra-ui/react'
-import { FaChevronDown, FaPlusCircle } from 'react-icons/fa'
+import { FaChevronDown } from 'react-icons/fa'
 import { Outlet, Link as ReactLink } from 'react-router-dom'
 import { PATH } from '../routes/path'
 import { useState, useContext, useEffect } from 'react'
 import ContactList from '../components/ContactList'
 import PageLoader from '../components/PageLoader'
 import { ContactContext, ContactListBaseVar } from '../contexts/ContactProvider'
+import { AiOutlinePlus, AiOutlineSearch } from 'react-icons/ai'
 
 function Contact() {
     const { data, loading, fetchMore } = useContext(ContactContext)
@@ -50,21 +51,44 @@ function Contact() {
                             Contact
                         </Text>
 
-                        <Link
-                            as={ReactLink}
-                            to={PATH.addContact}
+                        <Flex
+                            align='center'
+                            gap='1rem'
                         >
-                            <Icon
-                                as={FaPlusCircle}
-                                fontSize='25px'
-                                color='primary'
-                                cursor='pointer'
-                                _hover={{
-                                    color: 'primaryDarker',
-                                }}
-                                transitionDuration='normal'
-                            />
-                        </Link>
+                            <Link
+                                as={ReactLink}
+                                to={PATH.searchContact}
+                            >
+                                <Icon
+                                    as={AiOutlineSearch}
+                                    fontSize='28px'
+                                    color='chakra-body-text'
+                                    opacity='.5'
+                                    cursor='pointer'
+                                    _hover={{
+                                        opacity: '1',
+                                    }}
+                                    transitionDuration='normal'
+                                />
+                            </Link>
+
+                            <Link
+                                as={ReactLink}
+                                to={PATH.addContact}
+                            >
+                                <Icon
+                                    as={AiOutlinePlus}
+                                    fontSize='28px'
+                                    color='chakra-body-text'
+                                    opacity='.5'
+                                    cursor='pointer'
+                                    _hover={{
+                                        opacity: '1',
+                                    }}
+                                    transitionDuration='normal'
+                                />
+                            </Link>
+                        </Flex>
                     </Flex>
                 </Container>
             </Box>

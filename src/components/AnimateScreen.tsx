@@ -1,15 +1,18 @@
 import { Box, Container } from '@chakra-ui/react'
-import { motion } from 'framer-motion'
+import { AnimationDefinition, motion } from 'framer-motion'
 import { ReactNode, useLayoutEffect } from 'react'
+import { AnimationEvent } from 'react'
 
 type AnimateScreenProps = {
     initial?: any
     animate?: any
     exit?: any
     children: ReactNode
+    onAnimationStart?: (e: AnimationEvent<HTMLDivElement>) => void
+    onAnimationComplete?: (e: AnimationDefinition) => void
 }
 
-function AnimateScreen({ initial, animate, exit, children }: AnimateScreenProps) {
+function AnimateScreen({ initial, animate, exit, children, onAnimationStart, onAnimationComplete }: AnimateScreenProps) {
     useLayoutEffect(() => {
         document.body.style.overflow = 'hidden'
 
@@ -47,6 +50,8 @@ function AnimateScreen({ initial, animate, exit, children }: AnimateScreenProps)
                     bg='white'
                     overflowY='auto'
                     h='100vh'
+                    onAnimationStart={onAnimationStart}
+                    onAnimationComplete={onAnimationComplete}
                 >
                     {children}
                 </Container>

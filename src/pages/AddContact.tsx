@@ -14,13 +14,20 @@ import { AddContactWithPhones } from '../gql/mutations'
 import { ContactContext } from '../contexts/ContactProvider'
 
 function AddContact() {
-    const { refetch } = useContext(ContactContext)
+    const { refetch, fetchMore } = useContext(ContactContext)
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [phones, setPhones] = useState<inputMultipleType[]>([{ value: '' }])
     const [isValid, setIsValid] = useState(false)
     const toast = useToast()
     const navigate = useNavigate()
+    const [loaded, setLoaded] = useState(false)
+
+    useEffect(() => {
+        if (loaded) {
+            document.getElementById('add-contact-first-name')?.focus()
+        }
+    }, [loaded])
 
     const [addContact, { loading }] = useMutation(AddContactWithPhones, {
         onCompleted: res => {
@@ -29,7 +36,7 @@ function AddContact() {
                 status: 'success',
                 title: 'Success',
                 description: `${res.insert_contact.returning[0].first_name} ${res.insert_contact.returning[0].last_name} has been added to contact`,
-                position: 'bottom',
+                position: 'top',
                 duration: 3000,
                 isClosable: true,
                 containerStyle: {
@@ -41,6 +48,18 @@ function AddContact() {
         },
         onError: err => {
             toast.closeAll()
+            if (err.message.includes('phone_number_key'))
+                return toast({
+                    status: 'warning',
+                    description: 'The phone number already exists in another contact',
+                    position: 'bottom',
+                    duration: 3000,
+                    isClosable: true,
+                    containerStyle: {
+                        fontSize: 'sm',
+                    },
+                })
+
             toast({
                 status: 'error',
                 title: 'Failed',
@@ -65,11 +84,50 @@ function AddContact() {
         setIsValid(valid)
     }, [firstName, lastName, phones])
 
+    const handleCreateContact = () => {
+        console.log('click')
+        fetchMore!({
+            variables: {
+                where: {
+                    first_name: {
+                        _like: firstName,
+                    },
+                    last_name: {
+                        _like: lastName,
+                    },
+                },
+            },
+        }).then(res => {
+            if (res.data.contact.length > 0)
+                return toast({
+                    status: 'warning',
+                    description: `${firstName} ${lastName} already exist`,
+                    position: 'bottom',
+                    duration: 3000,
+                    isClosable: true,
+                    containerStyle: {
+                        fontSize: 'sm',
+                    },
+                })
+
+            addContact({
+                variables: {
+                    first_name: firstName,
+                    last_name: lastName,
+                    phones: phones.map(p => ({ number: p.value })),
+                },
+            })
+        })
+    }
+
     return (
         <AnimateScreen
             initial={{ top: '100vh' }}
             animate={{ top: '0' }}
             exit={{ top: '100vh' }}
+            onAnimationComplete={(e: any) => {
+                if (e.top === '0') setLoaded(true)
+            }}
         >
             <AnimateScreenHeader>
                 <Text fontWeight='semibold'>Add Contact</Text>
@@ -92,6 +150,7 @@ function AddContact() {
                 <Stack spacing='2.25rem'>
                     <Stack spacing='.75rem'>
                         <InputGroup
+                            id='add-contact-first-name'
                             icon={AiOutlineUser}
                             placeholder='First name'
                             value={firstName}
@@ -127,15 +186,7 @@ function AddContact() {
                             px='2rem'
                             isDisabled={!isValid}
                             isLoading={loading}
-                            onClick={() =>
-                                addContact({
-                                    variables: {
-                                        first_name: firstName,
-                                        last_name: lastName,
-                                        phones: phones.map(p => ({ number: p.value })),
-                                    },
-                                })
-                            }
+                            onClick={handleCreateContact}
                         >
                             Save
                         </Button>

@@ -1,4 +1,4 @@
-import { Flex } from '@chakra-ui/react'
+import { Divider, Flex, Stack } from '@chakra-ui/react'
 import { ReactNode } from 'react'
 
 type AnimateScreenHeaderProps = {
@@ -7,14 +7,16 @@ type AnimateScreenHeaderProps = {
 
 function AnimateScreenHeader({ children }: AnimateScreenHeaderProps) {
     return (
-        <Flex
-            h='header-height'
-            align='center'
-            justify='space-between'
-            mb='1.5rem'
-        >
-            {children}
-        </Flex>
+        <Stack>
+            <Flex
+                h='header-height'
+                align='center'
+                justify='space-between'
+            >
+                {children}
+            </Flex>
+            <Divider mb='1.5rem' />
+        </Stack>
     )
 }
 
