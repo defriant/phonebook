@@ -7,6 +7,7 @@ import InputGroup from './InputGroup'
 import { ApolloQueryResult, OperationVariables, useMutation } from '@apollo/client'
 import { EditContactById } from '../gql/mutations'
 import { FavoritesContext } from '../contexts/FavoriteContactProvider'
+import { ContactContext } from '../contexts/ContactProvider'
 
 type EditContactProps = {
     data: TContactDetail
@@ -17,6 +18,7 @@ function EditContact({ isOpen, onClose, data, refetch }: UseDisclosureProps & Ed
     const [firstName, setFirstName] = useState(data?.contact_by_pk.first_name ?? '')
     const [lastName, setLastName] = useState(data?.contact_by_pk.last_name ?? '')
     const { favorites, updateFavorite } = useContext(FavoritesContext)
+    const { fetchMore } = useContext(ContactContext)
 
     useEffect(() => {
         setFirstName(data?.contact_by_pk.first_name ?? '')
@@ -67,6 +69,46 @@ function EditContact({ isOpen, onClose, data, refetch }: UseDisclosureProps & Ed
             })
         },
     })
+
+    const handleEditContact = () => {
+        if (firstName.replaceAll(' ', '').length === 0) return
+        if (lastName.replaceAll(' ', '').length === 0) return
+
+        fetchMore!({
+            variables: {
+                where: {
+                    first_name: {
+                        _like: firstName,
+                    },
+                    last_name: {
+                        _like: lastName,
+                    },
+                },
+            },
+        }).then(res => {
+            if (res.data.contact.length > 0)
+                return toast({
+                    status: 'warning',
+                    description: `${firstName} ${lastName} already exist`,
+                    position: 'top',
+                    duration: 3000,
+                    isClosable: true,
+                    containerStyle: {
+                        fontSize: 'sm',
+                    },
+                })
+
+            editContact({
+                variables: {
+                    id: data.contact_by_pk.id,
+                    _set: {
+                        first_name: firstName,
+                        last_name: lastName,
+                    },
+                },
+            })
+        })
+    }
 
     return (
         <BottomSheet
@@ -137,20 +179,7 @@ function EditContact({ isOpen, onClose, data, refetch }: UseDisclosureProps & Ed
                         variant='solid'
                         w='50%'
                         colorScheme='green'
-                        onClick={() => {
-                            if (firstName.replaceAll(' ', '').length === 0) return
-                            if (lastName.replaceAll(' ', '').length === 0) return
-                            if (data?.contact_by_pk.id)
-                                editContact({
-                                    variables: {
-                                        id: data.contact_by_pk.id,
-                                        _set: {
-                                            first_name: firstName,
-                                            last_name: lastName,
-                                        },
-                                    },
-                                })
-                        }}
+                        onClick={handleEditContact}
                     >
                         Save
                     </Button>

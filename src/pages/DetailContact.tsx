@@ -6,7 +6,7 @@ import AnimateScreen from '../components/AnimateScreen'
 import { useContext, useEffect } from 'react'
 import AnimateScreenHeader from '../components/AnimateScreenHeader'
 import AnimateScreenBody from '../components/AnimateScreenBody'
-import { AiOutlineDelete, AiOutlineEdit, AiOutlinePhone } from 'react-icons/ai'
+import { AiOutlineDelete, AiOutlineEdit, AiOutlinePhone, AiOutlinePlus } from 'react-icons/ai'
 import { BsHeartFill } from 'react-icons/bs'
 import { useQuery } from '@apollo/client'
 import { GetContactDetail } from '../gql/queries'
@@ -16,6 +16,7 @@ import { TContact } from '../contexts/ContactProvider'
 import { scrollFix } from './Contact'
 import EditContact from '../components/EditContact'
 import DeleteContact from '../components/DeleteContact'
+import AddPhoneNumber from '../components/AddPhoneNumber'
 
 export type TContactDetail = {
     contact_by_pk: TContact
@@ -31,6 +32,7 @@ function DetailContact() {
     const { favorites, setFavorite, removeFavorite } = useContext(FavoritesContext)
     const { isOpen: isOpenDelete, onOpen: onOpenDelete, onClose: onCloseDelete } = useDisclosure()
     const { isOpen: isOpenEdit, onOpen: onOpenEdit, onClose: onCloseEdit } = useDisclosure()
+    const { isOpen: isOpenMorePhone, onOpen: onOpenMorePhone, onClose: onCloseMorePhone } = useDisclosure()
 
     useEffect(() => {
         if (data?.contact_by_pk === null && favorites?.find(fav => fav.id === parseInt(params.id!))) {
@@ -47,6 +49,7 @@ function DetailContact() {
                 if (e.left === '100vw') {
                     onCloseDelete()
                     onCloseEdit()
+                    onCloseMorePhone()
                 }
             }}
         >
@@ -172,10 +175,27 @@ function DetailContact() {
                                                 fontSize='24px'
                                                 color='primaryDarker'
                                             />
-                                            <Text>{phone.number}</Text>
+                                            <Text fontSize='sm'>{phone.number}</Text>
                                         </Flex>
                                     ))}
                                 </Stack>
+
+                                <Button
+                                    variant='outline'
+                                    colorScheme='green'
+                                    size='xs'
+                                    rounded='full'
+                                    fontWeight='medium'
+                                    onClick={onOpenMorePhone}
+                                    leftIcon={
+                                        <Icon
+                                            as={AiOutlinePlus}
+                                            fontSize='16px'
+                                        />
+                                    }
+                                >
+                                    More phone number
+                                </Button>
 
                                 <Box />
 
@@ -239,69 +259,14 @@ function DetailContact() {
                         isOpen={isOpenDelete}
                         onClose={onCloseDelete}
                     />
+                    <AddPhoneNumber
+                        data={data}
+                        isOpen={isOpenMorePhone}
+                        onClose={onCloseMorePhone}
+                        refetch={refetch}
+                    />
                 </>
             )}
-
-            {/* <BottomSheet
-                isOpen={isOpenDelete}
-                onClose={onCloseDelete}
-            >
-                <Stack
-                    h='40vh'
-                    p='1.5rem'
-                    spacing='1.5rem'
-                >
-                    <Flex
-                        align='center'
-                        justify='space-between'
-                    >
-                        <Text fontWeight='semibold'>
-                            Edit contact {data?.contact_by_pk.first_name} {data?.contact_by_pk.last_name}
-                        </Text>
-                        <Icon
-                            as={AiOutlineClose}
-                            fontSize='20px'
-                            cursor='pointer'
-                            opacity='.5'
-                            _hover={{
-                                opacity: '1',
-                            }}
-                            transitionDuration='normal'
-                        />
-                    </Flex>
-                    <Stack spacing='.75rem'>
-                        <InputGroup
-                            icon={AiOutlineUser}
-                            placeholder='First name'
-                        />
-                        <InputGroup
-                            icon={AiOutlineUser}
-                            placeholder='Last name'
-                        />
-                    </Stack>
-
-                    <Flex
-                        w='100%'
-                        gap='1rem'
-                        mt='auto'
-                    >
-                        <Button
-                            variant='outline'
-                            w='50%'
-                            colorScheme='green'
-                        >
-                            Cancel
-                        </Button>
-                        <Button
-                            variant='solid'
-                            w='50%'
-                            colorScheme='green'
-                        >
-                            Save
-                        </Button>
-                    </Flex>
-                </Stack>
-            </BottomSheet> */}
         </AnimateScreen>
     )
 }
