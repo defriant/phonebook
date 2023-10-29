@@ -6,15 +6,16 @@ import theme from './theme'
 import { ApolloProvider } from '@apollo/client'
 import App from './App'
 import { client } from './gql/apolloConfig'
-
-console.log(theme)
+import RouteProvider from './routes/RouteProvider'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
-        <ChakraProvider theme={theme}>
-            <ApolloProvider client={client}>
-                <App />
-            </ApolloProvider>
-        </ChakraProvider>
+        <RouteProvider>
+            <ChakraProvider theme={theme}>
+                <ApolloProvider client={client}>
+                    <App />
+                </ApolloProvider>
+            </ChakraProvider>
+        </RouteProvider>
     </React.StrictMode>,
 )

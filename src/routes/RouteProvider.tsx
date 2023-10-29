@@ -1,15 +1,15 @@
-import { useLayoutEffect, useState, startTransition } from 'react'
+import { useLayoutEffect, useState, startTransition, ReactNode } from 'react'
 import { Update, createBrowserHistory } from 'history'
 import { Router as ReactRouter } from 'react-router-dom'
-import Routes from './Routes'
 
 const history = createBrowserHistory()
 
 type RouteProviderProps = {
     basename?: string
+    children: ReactNode
 }
 
-function RouteProvider({ basename }: RouteProviderProps) {
+function RouteProvider({ basename, children }: RouteProviderProps) {
     const [routeState, setRouteState] = useState({
         action: history.action,
         location: history.location,
@@ -30,7 +30,7 @@ function RouteProvider({ basename }: RouteProviderProps) {
             navigationType={routeState.action}
             navigator={history}
         >
-            <Routes />
+            {children}
         </ReactRouter>
     )
 }

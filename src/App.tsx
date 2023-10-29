@@ -1,12 +1,12 @@
 import ContactProvider from './contexts/ContactProvider'
 import FavoriteContactProvider from './contexts/FavoriteContactProvider'
-import RouteProvider from './routes/RouteProvider'
+import Routes from './routes/Routes'
 
 function App() {
     return (
         <ContactProvider>
             <FavoriteContactProvider>
-                <RouteProvider />
+                <Routes />
             </FavoriteContactProvider>
         </ContactProvider>
     )
