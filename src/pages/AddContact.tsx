@@ -12,6 +12,7 @@ import AnimateScreenBody from '../components/AnimateScreenBody'
 import { useMutation } from '@apollo/client'
 import { AddContactWithPhones } from '../gql/mutations'
 import { ContactContext } from '../contexts/ContactProvider'
+import { scrollFix } from './Contact'
 
 function AddContact() {
     const { refetch, fetchMore } = useContext(ContactContext)
@@ -138,6 +139,7 @@ function AddContact() {
                     _hover={{
                         opacity: '1',
                     }}
+                    onClick={scrollFix}
                 >
                     <Icon
                         as={FaTimes}

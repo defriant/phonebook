@@ -8,6 +8,13 @@ import PageLoader from '../components/PageLoader'
 import { ContactContext, ContactListBaseVar } from '../contexts/ContactProvider'
 import { AiOutlinePlus, AiOutlineSearch } from 'react-icons/ai'
 
+// prevent scroll back to top
+export const scrollFix = () => {
+    if (window.innerHeight + Math.round(window.scrollY) >= document.body.offsetHeight) {
+        window.scrollTo(0, window.scrollY - 0.1)
+    }
+}
+
 function Contact() {
     const { data, loading, fetchMore } = useContext(ContactContext)
 
@@ -58,6 +65,7 @@ function Contact() {
                             <Link
                                 as={ReactLink}
                                 to={PATH.searchContact}
+                                onClick={scrollFix}
                             >
                                 <Icon
                                     as={AiOutlineSearch}
@@ -75,6 +83,7 @@ function Contact() {
                             <Link
                                 as={ReactLink}
                                 to={PATH.addContact}
+                                onClick={scrollFix}
                             >
                                 <Icon
                                     as={AiOutlinePlus}

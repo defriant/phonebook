@@ -3,7 +3,7 @@ import { FaArrowLeft } from 'react-icons/fa'
 import { Link as ReactLink, useParams } from 'react-router-dom'
 import { PATH } from '../routes/path'
 import AnimateScreen from '../components/AnimateScreen'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import AnimateScreenHeader from '../components/AnimateScreenHeader'
 import AnimateScreenBody from '../components/AnimateScreenBody'
 import { AiOutlineDelete, AiOutlineEdit, AiOutlinePhone } from 'react-icons/ai'
@@ -14,6 +14,7 @@ import { format } from 'date-fns'
 import { FavoritesContext } from '../contexts/FavoriteContactProvider'
 import { TContact } from '../contexts/ContactProvider'
 import BottomSheet from '../components/BottomSheet'
+import { scrollFix } from './Contact'
 
 type TContactDetail = {
     contact_by_pk: TContact
@@ -28,6 +29,12 @@ function DetailContact() {
     })
     const { favorites, setFavorite, removeFavorite } = useContext(FavoritesContext)
     const { isOpen: isOpenDelete, onOpen: onOpenDelete, onClose: onCloseDelete } = useDisclosure()
+
+    useEffect(() => {
+        if (data?.contact_by_pk === null && favorites?.find(fav => fav.id === parseInt(params.id!))) {
+            removeFavorite!(parseInt(params.id!))
+        }
+    }, [data])
 
     return (
         <AnimateScreen
@@ -48,6 +55,7 @@ function DetailContact() {
                     _hover={{
                         opacity: '1',
                     }}
+                    onClick={scrollFix}
                 >
                     <Icon
                         as={FaArrowLeft}

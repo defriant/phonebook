@@ -4,6 +4,7 @@ import { Link as ReactLink } from 'react-router-dom'
 import { PATH } from '../routes/path'
 import { TContact } from '../contexts/ContactProvider'
 import { TFavorite } from '../contexts/FavoriteContactProvider'
+import { scrollFix } from '../pages/Contact'
 
 type CardContactProps<TData> = {
     isFavorite?: boolean
@@ -16,6 +17,7 @@ function CardContact({ isFavorite, data }: CardContactProps<TContact | TFavorite
             as={ReactLink}
             to={PATH.detailContact.replace(':id', `${data.id}`)}
             textDecor='none !important'
+            onClick={scrollFix}
         >
             <Grid
                 templateColumns='50px 1fr auto'

@@ -11,6 +11,7 @@ import { useEffect, useState, useContext } from 'react'
 import { ContactContext, TContact } from '../contexts/ContactProvider'
 import CardContact from '../components/CardContact'
 import { FavoritesContext } from '../contexts/FavoriteContactProvider'
+import { scrollFix } from './Contact'
 
 function SearchContact() {
     const { fetchMore } = useContext(ContactContext)
@@ -99,6 +100,7 @@ function SearchContact() {
                     _hover={{
                         opacity: '1',
                     }}
+                    onClick={scrollFix}
                 >
                     <Icon
                         as={FaTimes}
