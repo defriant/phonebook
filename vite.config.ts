@@ -88,7 +88,7 @@ const manifestForPlugIn: Partial<VitePWAOptions> = {
 export default defineConfig({
     plugins: [react(), VitePWA(manifestForPlugIn)],
     server: {
-        port: 3001,
+        port: 3000,
         host: true,
     },
     build: {

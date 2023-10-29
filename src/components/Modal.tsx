@@ -30,7 +30,10 @@ function Modal({ children, isOpen, onClose, height = 'auto' }: ModalProps) {
                         h='100vh'
                         bg='rgba(0, 0, 0, .5)'
                     >
-                        <Center h='100%'>
+                        <Center
+                            h='100%'
+                            pb='25vh'
+                        >
                             <Box className='_modal-content_'>{children}</Box>
                         </Center>
                     </Container>
