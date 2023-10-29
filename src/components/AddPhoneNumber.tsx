@@ -27,6 +27,10 @@ function AddPhoneNumber({ isOpen, onClose, data, refetch }: UseDisclosureProps &
         setIsValid(valid)
     }, [phoneNumber])
 
+    useEffect(() => {
+        setPhoneNumber('')
+    }, [isOpen])
+
     const toast = useToast()
     const [addNumber, { loading }] = useMutation(AddNumberToContact, {
         onCompleted: res => {
