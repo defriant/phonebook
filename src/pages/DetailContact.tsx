@@ -96,7 +96,7 @@ function DetailContact() {
                     </Center>
                 )}
 
-                {!data?.contact_by_pk && (
+                {!loading && !data?.contact_by_pk && (
                     <Center h='50vh'>
                         <Stack align='center'>
                             <Text fontSize='4xl'>404</Text>

@@ -12,6 +12,12 @@ const DetailContact = lazy(() => import('../pages/DetailContact'))
 function Routes() {
     const location = useLocation()
 
+    // useEffect(() => {
+    //     if (window.innerHeight + Math.round(window.scrollY) >= document.body.offsetHeight) {
+    //         window.scrollTo(0, window.scrollY - 0.1)
+    //     }
+    // }, [location.pathname])
+
     return (
         <Suspense fallback={<PageLoader />}>
             <AnimatePresence>
