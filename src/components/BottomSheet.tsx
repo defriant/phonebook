@@ -22,7 +22,6 @@ function BottomSheet({ children, isOpen, onClose, height = 'auto' }: BottomSheet
                     right='0'
                     bottom='0'
                     w='body-width'
-                    // bg='rgba(0, 0, 0, .5)'
                     backdropFilter='blur(3px)'
                     onClick={onClose}
                     zIndex='modal'
@@ -30,7 +29,6 @@ function BottomSheet({ children, isOpen, onClose, height = 'auto' }: BottomSheet
                     <Container
                         h='100vh'
                         bg='rgba(0, 0, 0, .5)'
-                        // backdropFilter='blur(3px)'
                     />
                 </Box>
             )}

@@ -4,9 +4,8 @@ import AnimateScreenBody from '../components/AnimateScreenBody'
 import { Alert, AlertIcon, Center, Icon, Link, Spinner, Stack, Text } from '@chakra-ui/react'
 import { Link as ReactLink } from 'react-router-dom'
 import { PATH } from '../routes/path'
-import { FaTimes } from 'react-icons/fa'
 import InputGroup from '../components/InputGroup'
-import { AiOutlineSearch } from 'react-icons/ai'
+import { AiOutlineClose, AiOutlineSearch } from 'react-icons/ai'
 import { useEffect, useState, useContext } from 'react'
 import { ContactContext, TContact } from '../contexts/ContactProvider'
 import CardContact from '../components/CardContact'
@@ -103,8 +102,8 @@ function SearchContact() {
                     onClick={scrollFix}
                 >
                     <Icon
-                        as={FaTimes}
-                        fontSize='22px'
+                        as={AiOutlineClose}
+                        fontSize='24px'
                     />
                 </Link>
             </AnimateScreenHeader>

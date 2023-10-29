@@ -13,22 +13,24 @@ import { GetContactDetail } from '../gql/queries'
 import { format } from 'date-fns'
 import { FavoritesContext } from '../contexts/FavoriteContactProvider'
 import { TContact } from '../contexts/ContactProvider'
-import BottomSheet from '../components/BottomSheet'
 import { scrollFix } from './Contact'
+import EditContact from '../components/EditContact'
+import DeleteContact from '../components/DeleteContact'
 
-type TContactDetail = {
+export type TContactDetail = {
     contact_by_pk: TContact
 }
 
 function DetailContact() {
     const params = useParams()
-    const { data, loading, error } = useQuery<TContactDetail>(GetContactDetail, {
+    const { data, loading, error, refetch } = useQuery<TContactDetail>(GetContactDetail, {
         variables: {
             id: parseInt(params.id!),
         },
     })
     const { favorites, setFavorite, removeFavorite } = useContext(FavoritesContext)
     const { isOpen: isOpenDelete, onOpen: onOpenDelete, onClose: onCloseDelete } = useDisclosure()
+    const { isOpen: isOpenEdit, onOpen: onOpenEdit, onClose: onCloseEdit } = useDisclosure()
 
     useEffect(() => {
         if (data?.contact_by_pk === null && favorites?.find(fav => fav.id === parseInt(params.id!))) {
@@ -44,6 +46,7 @@ function DetailContact() {
             onAnimationStart={(e: any) => {
                 if (e.left === '100vw') {
                     onCloseDelete()
+                    onCloseEdit()
                 }
             }}
         >
@@ -72,6 +75,8 @@ function DetailContact() {
                             as={AiOutlineEdit}
                             fontSize='28px'
                             color='yellow.500'
+                            cursor='pointer'
+                            onClick={onOpenEdit}
                         />
                         <Icon
                             as={AiOutlineDelete}
@@ -221,12 +226,82 @@ function DetailContact() {
                 )}
             </AnimateScreenBody>
 
-            <BottomSheet
+            {!error && data?.contact_by_pk && (
+                <>
+                    <EditContact
+                        data={data}
+                        isOpen={isOpenEdit}
+                        onClose={onCloseEdit}
+                        refetch={refetch}
+                    />
+                    <DeleteContact
+                        data={data}
+                        isOpen={isOpenDelete}
+                        onClose={onCloseDelete}
+                    />
+                </>
+            )}
+
+            {/* <BottomSheet
                 isOpen={isOpenDelete}
                 onClose={onCloseDelete}
             >
-                <Box height='300px'></Box>
-            </BottomSheet>
+                <Stack
+                    h='40vh'
+                    p='1.5rem'
+                    spacing='1.5rem'
+                >
+                    <Flex
+                        align='center'
+                        justify='space-between'
+                    >
+                        <Text fontWeight='semibold'>
+                            Edit contact {data?.contact_by_pk.first_name} {data?.contact_by_pk.last_name}
+                        </Text>
+                        <Icon
+                            as={AiOutlineClose}
+                            fontSize='20px'
+                            cursor='pointer'
+                            opacity='.5'
+                            _hover={{
+                                opacity: '1',
+                            }}
+                            transitionDuration='normal'
+                        />
+                    </Flex>
+                    <Stack spacing='.75rem'>
+                        <InputGroup
+                            icon={AiOutlineUser}
+                            placeholder='First name'
+                        />
+                        <InputGroup
+                            icon={AiOutlineUser}
+                            placeholder='Last name'
+                        />
+                    </Stack>
+
+                    <Flex
+                        w='100%'
+                        gap='1rem'
+                        mt='auto'
+                    >
+                        <Button
+                            variant='outline'
+                            w='50%'
+                            colorScheme='green'
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            variant='solid'
+                            w='50%'
+                            colorScheme='green'
+                        >
+                            Save
+                        </Button>
+                    </Flex>
+                </Stack>
+            </BottomSheet> */}
         </AnimateScreen>
     )
 }

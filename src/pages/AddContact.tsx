@@ -1,9 +1,8 @@
 import { Button, Center, Icon, Link, Stack, Text, useToast } from '@chakra-ui/react'
-import { FaTimes } from 'react-icons/fa'
 import { Link as ReactLink, useNavigate } from 'react-router-dom'
 import { PATH } from '../routes/path'
 import AnimateScreen from '../components/AnimateScreen'
-import { AiOutlinePhone, AiOutlineUser } from 'react-icons/ai'
+import { AiOutlineClose, AiOutlinePhone, AiOutlineUser } from 'react-icons/ai'
 import InputGroup from '../components/InputGroup'
 import InputGroupMultiple, { inputMultipleType } from '../components/InputGroupMultiple'
 import { useContext, useEffect, useState } from 'react'
@@ -86,7 +85,6 @@ function AddContact() {
     }, [firstName, lastName, phones])
 
     const handleCreateContact = () => {
-        console.log('click')
         fetchMore!({
             variables: {
                 where: {
@@ -142,8 +140,8 @@ function AddContact() {
                     onClick={scrollFix}
                 >
                     <Icon
-                        as={FaTimes}
-                        fontSize='22px'
+                        as={AiOutlineClose}
+                        fontSize='24px'
                     />
                 </Link>
             </AnimateScreenHeader>
