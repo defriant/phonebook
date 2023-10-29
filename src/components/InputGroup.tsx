@@ -18,6 +18,7 @@ function InputGroup({ icon, placeholder, value, onChange }: InputGroupProps) {
             pr='1.25rem'
             borderRadius='2xl'
             role='group'
+            bg='#FBFBFB'
         >
             <Center h='30px'>
                 <Icon

@@ -92,10 +92,11 @@ function DetailContact() {
                         <Box
                             h='max-content'
                             borderRadius='12px'
-                            bg='#F3F3F3'
+                            bg='#F7F7F7'
                             pos='relative'
                             mt='50px'
-                            py='calc(50px + 1rem)'
+                            pt='calc(50px + 1rem)'
+                            pb='50px'
                             mb='3rem'
                         >
                             <Center
@@ -108,6 +109,7 @@ function DetailContact() {
                                     w='100px'
                                     h='100px'
                                     name={`${data.contact_by_pk.first_name} ${data.contact_by_pk.last_name}`}
+                                    boxShadow='lg'
                                 />
                             </Center>
 

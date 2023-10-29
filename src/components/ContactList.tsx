@@ -1,4 +1,4 @@
-import { Fragment, useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Stack, Text } from '@chakra-ui/react'
 import CardContact from './CardContact'
 import { ContactContext, TContact } from '../contexts/ContactProvider'
@@ -57,26 +57,28 @@ function ContactList() {
 
     return (
         <>
-            <Stack spacing='1rem'>
-                <Text
-                    fontSize='sm'
-                    fontWeight='semibold'
-                    pos='sticky'
-                >
-                    Favorite
-                </Text>
-                <Stack spacing='.75rem'>
-                    {favorites?.map((fav, i: number) => (
-                        <CardContact
-                            key={i}
-                            data={fav}
-                            isFavorite
-                        />
-                    ))}
+            {favorites && favorites?.length > 0 && (
+                <Stack spacing='1rem'>
+                    <Text
+                        fontSize='sm'
+                        fontWeight='semibold'
+                        pos='sticky'
+                    >
+                        Favorite
+                    </Text>
+                    <Stack spacing='.75rem'>
+                        {favorites?.map((fav, i: number) => (
+                            <CardContact
+                                key={i}
+                                data={fav}
+                                isFavorite
+                            />
+                        ))}
+                    </Stack>
                 </Stack>
-            </Stack>
+            )}
 
-            <Stack spacing='1rem'>
+            <Stack spacing='1.5rem'>
                 <Text
                     fontSize='sm'
                     fontWeight='semibold'
@@ -84,7 +86,10 @@ function ContactList() {
                     All Contact
                 </Text>
                 {formattedContacts.map((c: any, i: number) => (
-                    <Fragment key={i}>
+                    <Stack
+                        key={i}
+                        spacing='.75rem'
+                    >
                         <Text
                             fontSize='sm'
                             fontWeight='semibold'
@@ -102,7 +107,7 @@ function ContactList() {
                                     )
                             })}
                         </Stack>
-                    </Fragment>
+                    </Stack>
                 ))}
             </Stack>
         </>

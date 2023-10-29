@@ -22,11 +22,10 @@ function InputGroupMultiple({ type, icon, placeholder, values, setValues }: Inpu
             pl='.5rem'
             pr='1.25rem'
             borderRadius='2xl'
+            bg='#FBFBFB'
+            role='group'
         >
-            <Grid
-                templateColumns='40px 1fr'
-                role='group'
-            >
+            <Grid templateColumns='40px 1fr'>
                 <Center h='30px'>
                     <Icon
                         as={icon}
