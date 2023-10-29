@@ -13,7 +13,7 @@ function ContactList() {
         if (data) {
             const sortedContact: any = []
 
-            // restructure received contacts
+            // restructure received contact list to be sections from a-z
             data.contact.forEach(contact => {
                 if (favorites?.find(fav => fav.id === contact.id)) return
 

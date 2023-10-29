@@ -22,6 +22,7 @@ function DeleteContact({ isOpen, onClose, data }: EditContactProps & UseDisclosu
 
     const [deleteContact, { loading }] = useMutation(DeleteContactById, {
         onCompleted: res => {
+            // show success message toast
             toast.closeAll()
             toast({
                 status: 'success',
@@ -35,14 +36,15 @@ function DeleteContact({ isOpen, onClose, data }: EditContactProps & UseDisclosu
                 },
             })
 
+            // also remove data from favorite list
             removeFavorite!(res.delete_contact_by_pk.id)
             onClose!()
             navigate(PATH.contact)
             refetch!()
         },
         onError: err => {
+            // show error toast
             toast.closeAll()
-
             toast({
                 status: 'error',
                 title: 'Failed',

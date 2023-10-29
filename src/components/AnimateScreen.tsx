@@ -13,6 +13,7 @@ type AnimateScreenProps = {
 }
 
 function AnimateScreen({ initial, animate, exit, children, onAnimationStart, onAnimationComplete }: AnimateScreenProps) {
+    // hide body scroll when animated screen mounted (Ex: AddContact, SearchContact.. etc)
     useLayoutEffect(() => {
         document.body.style.overflow = 'hidden'
 
@@ -57,26 +58,6 @@ function AnimateScreen({ initial, animate, exit, children, onAnimationStart, onA
                 </Container>
             </Container>
         </Box>
-
-        // <Box
-        //     as={motion.div}
-        //     pos='fixed'
-        //     top='0'
-        //     left='0'
-        //     right='0'
-        //     bottom='0'
-        //     initial={initial}
-        //     animate={animate}
-        //     exit={exit}
-        //     zIndex='overlay'
-        // >
-        //     <Container
-        //         h='100vh'
-        //         overflow='auto'
-        //     >
-        //         {children}
-        //     </Container>
-        // </Box>
     )
 }
 

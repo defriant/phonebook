@@ -21,6 +21,8 @@ function Contact() {
     const [showLoadMore, setShowLoadMore] = useState(false)
     const [isLoadMore, setIsLoadMore] = useState(false)
 
+    // set load more button based on response contact length and limit variable
+    // if the response contact length is not divisible by the limit variable, will be considered no more data
     useEffect(() => {
         if (data?.contact && data.contact.length % ContactListBaseVar.limit === 0) {
             setShowLoadMore(true)

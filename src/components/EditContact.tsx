@@ -20,6 +20,7 @@ function EditContact({ isOpen, onClose, data, refetch }: UseDisclosureProps & Ed
     const { favorites, updateFavorite } = useContext(FavoritesContext)
     const { fetchMore } = useContext(ContactContext)
 
+    // reset form on open / close bottomsheet
     useEffect(() => {
         setFirstName(data?.contact_by_pk.first_name ?? '')
         setLastName(data?.contact_by_pk.last_name ?? '')
@@ -29,6 +30,7 @@ function EditContact({ isOpen, onClose, data, refetch }: UseDisclosureProps & Ed
 
     const [editContact, { loading }] = useMutation(EditContactById, {
         onCompleted: res => {
+            // show success message toast
             toast.closeAll()
             toast({
                 status: 'success',
@@ -42,6 +44,7 @@ function EditContact({ isOpen, onClose, data, refetch }: UseDisclosureProps & Ed
                 },
             })
 
+            // update the data if exist in favorite list
             if (favorites?.find(fav => fav.id === data.contact_by_pk.id))
                 updateFavorite!(data.contact_by_pk.id, {
                     id: res.update_contact_by_pk.id,
@@ -54,8 +57,8 @@ function EditContact({ isOpen, onClose, data, refetch }: UseDisclosureProps & Ed
             refetch()
         },
         onError: err => {
+            // show error message toast
             toast.closeAll()
-
             toast({
                 status: 'error',
                 title: 'Failed',

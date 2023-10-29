@@ -34,6 +34,7 @@ function DetailContact() {
     const { isOpen: isOpenEdit, onOpen: onOpenEdit, onClose: onCloseEdit } = useDisclosure()
     const { isOpen: isOpenMorePhone, onOpen: onOpenMorePhone, onClose: onCloseMorePhone } = useDisclosure()
 
+    // if contact not found, remove it from favorite if exist
     useEffect(() => {
         if (data?.contact_by_pk === null && favorites?.find(fav => fav.id === parseInt(params.id!))) {
             removeFavorite!(parseInt(params.id!))

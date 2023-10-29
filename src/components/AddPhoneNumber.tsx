@@ -20,6 +20,7 @@ function AddPhoneNumber({ isOpen, onClose, data, refetch }: UseDisclosureProps &
     const { updateFavorite } = useContext(FavoritesContext)
     const { refetch: refetchContactList } = useContext(ContactContext)
 
+    // validate if phone number not null
     useEffect(() => {
         let valid = true
         if (phoneNumber.replaceAll(' ', '').length === 0) valid = false
@@ -29,6 +30,7 @@ function AddPhoneNumber({ isOpen, onClose, data, refetch }: UseDisclosureProps &
     const toast = useToast()
     const [addNumber, { loading }] = useMutation(AddNumberToContact, {
         onCompleted: res => {
+            // show success toast message
             toast.closeAll()
             toast({
                 status: 'success',
@@ -42,6 +44,7 @@ function AddPhoneNumber({ isOpen, onClose, data, refetch }: UseDisclosureProps &
                 },
             })
 
+            // also update favorite list if exist
             updateFavorite!(res.insert_phone.returning[0].contact.id, {
                 id: res.insert_phone.returning[0].contact.id,
                 first_name: res.insert_phone.returning[0].contact.first_name,
@@ -53,6 +56,7 @@ function AddPhoneNumber({ isOpen, onClose, data, refetch }: UseDisclosureProps &
             refetchContactList!()
         },
         onError: err => {
+            // show error message toast
             toast.closeAll()
             if (err.message.includes('phone_number_key'))
                 return toast({

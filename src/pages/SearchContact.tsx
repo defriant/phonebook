@@ -27,6 +27,7 @@ function SearchContact() {
         }
     }, [loaded])
 
+    // delay input so it will not trigger mutation immediately
     useEffect(() => {
         const timeOut = setTimeout(() => setKeywords(input), 500)
         return () => clearTimeout(timeOut)
@@ -35,8 +36,12 @@ function SearchContact() {
     useEffect(() => {
         if (keywords.replaceAll(' ', '')) {
             setIsSearching(true)
+
+            // split given keyword by space
             const splitKeyword = keywords.split(' ')
             const pruneKeyword = splitKeyword.filter(v => v !== '')
+
+            // first keyword will be index 0, the rest will be second keyword
             const first = pruneKeyword[0]
             const second = pruneKeyword
                 .filter(v => v !== first)
@@ -45,6 +50,7 @@ function SearchContact() {
 
             let searchResult: TContact[] = []
 
+            // fetch first_name with first keyword
             fetchMore!({
                 variables: {
                     limit: 100,
@@ -58,6 +64,8 @@ function SearchContact() {
             }).then(res => {
                 searchResult = [...res.data.contact]
 
+                // fetch last_name with second keyword,
+                // if second keyword is empty it will be replaced with first keyword
                 fetchMore!({
                     variables: {
                         limit: 100,
@@ -69,6 +77,7 @@ function SearchContact() {
                         },
                     },
                 }).then(res => {
+                    // combines first_name and last_name query result
                     const filteredRes = res.data.contact.filter(v => !searchResult.find(s => s.id === v.id))
                     searchResult = [...searchResult, ...filteredRes]
                     setIsSearching(false)

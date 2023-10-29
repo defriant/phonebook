@@ -23,6 +23,7 @@ function AddContact() {
     const navigate = useNavigate()
     const [loaded, setLoaded] = useState(false)
 
+    // autofocus on input element when component mounted
     useEffect(() => {
         if (loaded) {
             document.getElementById('add-contact-first-name')?.focus()
@@ -31,6 +32,7 @@ function AddContact() {
 
     const [addContact, { loading }] = useMutation(AddContactWithPhones, {
         onCompleted: res => {
+            // show success message toast
             toast.closeAll()
             toast({
                 status: 'success',
@@ -47,6 +49,7 @@ function AddContact() {
             refetch!()
         },
         onError: err => {
+            // show error message toast
             toast.closeAll()
             if (err.message.includes('phone_number_key'))
                 return toast({
@@ -74,6 +77,7 @@ function AddContact() {
         },
     })
 
+    // validate empty form
     useEffect(() => {
         let valid = true
 
@@ -85,6 +89,7 @@ function AddContact() {
     }, [firstName, lastName, phones])
 
     const handleCreateContact = () => {
+        // check if given first/last name is exist in the contact
         fetchMore!({
             variables: {
                 where: {
@@ -97,6 +102,7 @@ function AddContact() {
                 },
             },
         }).then(res => {
+            // show warning toast if first/last name already exist
             if (res.data.contact.length > 0)
                 return toast({
                     status: 'warning',
